@@ -14,8 +14,8 @@ connection.connect();
 
 
 /*
-PUT item            PUT /ext-id
-DELETE item         DELETE /ext-id
+
+DELETE item list    DELETE /
 
 A FAIRE:
     tests des valeurs POST
@@ -71,6 +71,8 @@ router.post('/', function(req, res, next) {
     var description_item = req.body.description_item;
     var value_item = req.body.value_item;
     var quantity_item = req.body.quantity_item;
+
+    // Test des valeurs
 
     var postItem = function(retfunc){
         connection.query('INSERT INTO item_cashReg (idext_item, name_item, description_item, value_item, quantity_item) VALUES (?, ?, ?, ?, ?)', [idext_item, name_item, description_item, value_item, quantity_item], function(error, results, fields) {
