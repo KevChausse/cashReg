@@ -6,7 +6,7 @@ USE cashReg_db;
 /* Création des tables */
 
 CREATE TABLE IF NOT EXISTS item_cashReg (
-	idint_items int PRIMARY KEY AUTO_INCREMENT,
+	idint_item int PRIMARY KEY AUTO_INCREMENT,
 	idext_item int,
 	name_item varchar(20),
 	description_item text,
