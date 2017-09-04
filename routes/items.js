@@ -1,13 +1,7 @@
 var express = require('express');
 var router = express.Router();
-var mysql = require('mysql');
 
-var connection = mysql.createConnection({
-	host : 'localhost', // à renseigner
-	user : 'root', // à renseigner
-	password : 'root', // à renseigner
-	database : 'cashReg_db' // à renseigner
-});
+var connection = require('../lib/connection');
 
 
 connection.connect();
@@ -18,10 +12,12 @@ connection.connect();
 DELETE item list    DELETE /
 
 A FAIRE:
-    tests des valeurs POST
-    tests des valeurs PUT
-    tests des valeurs DELETE ind
-    tests des valeurs DELETE list
+    tests des valeurs POST + securité
+    tests des valeurs PUT + sécurité
+    tests des valeurs DELETE ind + sécurité
+    tests des valeurs DELETE list + sécurité
+    var connection dans un fichier externe de configuration
+
 
 */
 
