@@ -15,4 +15,5 @@ Le lancement de l'application se fait : `npm start` ou `nodemon` depuis le dossi
 ## Accès à l'API
 
 L'url d'accès à l'api est la suivante: `http://localhost:3000/`
+
 Pour la gestion des items: `http://localhost:3000/items/`
