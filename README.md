@@ -1,6 +1,6 @@
 # cashReg
 
-Version : 0.0.4
+Version : 0.1.0
 
 ## Mise en route de l'application
 
