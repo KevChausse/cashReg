@@ -3,6 +3,7 @@ var router = express.Router();
 
 var connection = require('../lib/connection');
 
+// Items management part
 
 connection.connect();
 

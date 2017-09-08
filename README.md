@@ -2,6 +2,11 @@
 
 Version : 0.1.0
 
+## Technologies utilisées
+
+Node.js + Express
+MySQL
+
 ## Mise en route de l'application
 
 ### Base de données
