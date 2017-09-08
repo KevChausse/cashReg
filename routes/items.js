@@ -5,8 +5,6 @@ var connection = require('../lib/connection');
 
 // Items management part
 
-connection.connect();
-
 /* GET items listing. */
 router.get('/', function(req, res, next) {
 
