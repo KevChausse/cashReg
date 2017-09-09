@@ -9,7 +9,7 @@ var connection = require('../lib/connection');
 router.get('/', function(req, res, next) {
 
     var getSumsList = function(retfunc){
-        connection.query('SELECT idext_sum, SUM((value_item * quantity_sum)) as total_item, date_sum FROM sum_item_cashReg si JOIN item_cashReg i ON si.id_item = i.idint_item JOIN sum_cashReg s ON si.id_sum=s.idint_sum GROUP BY idint_sum', function(error, results, fields) {
+        connection.query('SELECT idext_sum, COALESCE(SUM((value_item * quantity_sum)),0) as total_item, date_sum FROM sum_cashReg s LEFT JOIN sum_item_cashReg si ON si.id_sum=s.idint_sum LEFT JOIN item_cashReg i ON si.id_item = i.idint_item GROUP BY idint_sum', function(error, results, fields) {
             
             if(error) res.send(error);
             else retfunc(results);
@@ -38,7 +38,9 @@ router.get('/:idext_sum', function(req, res, next) {
 
                     if(error) res.send(error);
                     else {
-                        results[0]['items'] = resultItem
+                        if(resultItem.length>0){
+                            results[0]['items'] = resultItem
+                        }
                         retfunc(results);
                     }
 
@@ -59,6 +61,25 @@ router.get('/:idext_sum', function(req, res, next) {
 
 /* POST new sum. */
 router.post('/', function(req, res, next) {
+    idext_sum = req.body.idext_sum;
+
+    var postSum = function(retfunc){
+        if( !Number.isNaN(idext_sum) ){
+            connection.query('INSERT INTO sum_cashReg (idext_sum) VALUES (?)', [idext_sum], function(error, results, fields) {
+                
+                if(error) res.send(error);
+                else retfunc(results);
+
+            });
+        }
+        else {
+            res.send("Erreur de format de valeur.");
+        }
+    }
+
+    postSum(function(results) {
+        res.json(results);
+    });
 
 });
 

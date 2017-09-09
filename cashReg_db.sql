@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS item_cashReg (
 CREATE TABLE IF NOT EXISTS sum_cashReg (
 	idint_sum int PRIMARY KEY AUTO_INCREMENT,
 	idext_sum int,
-	date_sum DATETIME
+	date_sum DATETIME DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB;
 
 
@@ -42,9 +42,9 @@ INSERT INTO item_cashReg (idext_item, name_item, description_item, value_item, q
 
 
 
-INSERT INTO sum_cashReg (idext_sum, date_sum) VALUES 
-	(1234,'2017-09-10 13:59:59'),
-	(1235,'2017-09-11 14:59:59');
+INSERT INTO sum_cashReg (idext_sum) VALUES 
+	(1234),
+	(1235);
 
 
 
