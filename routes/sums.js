@@ -29,12 +29,21 @@ router.get('/', function(req, res, next) {
 router.get('/:idext_sum', function(req, res, next) {
     idext_sum = req.params.idext_sum
 
-// + joindre liste des items + qte
     var getSumsItem = function(retfunc){
         connection.query('SELECT idext_sum, SUM((value_item * quantity_sum)) as total_item, date_sum FROM sum_item_cashReg si JOIN item_cashReg i ON si.id_item = i.idint_item JOIN sum_cashReg s ON si.id_sum=s.idint_sum WHERE idext_sum = ? GROUP BY idint_sum', [idext_sum], function(error, results, fields) {
             
             if(error) res.send(error);
-            else /* + joindre liste des items + qte */ retfunc(results);
+            else {
+                connection.query('SELECT name_item, quantity_sum, value_item, (quantity_sum * value_item) as total_item FROM sum_item_cashReg si JOIN sum_cashReg s ON si.id_sum = s.idint_sum JOIN item_cashReg i ON si.id_item = i.idint_item WHERE idext_sum = ? ', [idext_sum], function(error, resultItem, fields) {
+
+                    if(error) res.send(error);
+                    else {
+                        results[0]['items'] = resultItem
+                        retfunc(results);
+                    }
+
+                });
+            }
 
         });
     }
