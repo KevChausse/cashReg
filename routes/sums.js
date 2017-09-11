@@ -9,7 +9,7 @@ var connection = require('../lib/connection');
 router.get('/', function(req, res, next) {
 
     var getSumsList = function(retfunc){
-        connection.query('SELECT idext_sum, COALESCE(SUM((value_item * quantity_sum)),0) as total_item, date_sum FROM sum_cashReg s LEFT JOIN sum_item_cashReg si ON si.id_sum=s.idint_sum LEFT JOIN item_cashReg i ON si.id_item = i.idint_item GROUP BY idint_sum', function(error, results, fields) {
+        connection.query('SELECT idext_sum, COALESCE(SUM(value_item * quantity_sum),0) as total_sum, date_sum FROM sum_cashReg s LEFT JOIN sum_item_cashReg si ON si.id_sum=s.idint_sum LEFT JOIN item_cashReg i ON si.id_item = i.idint_item GROUP BY idint_sum', function(error, results, fields) {
             
             if(error) res.send(error);
             else retfunc(results);
@@ -30,11 +30,11 @@ router.get('/:idext_sum', function(req, res, next) {
     idext_sum = req.params.idext_sum
 
     var getSumsItem = function(retfunc){
-        connection.query('SELECT idext_sum, SUM((value_item * quantity_sum)) as total_item, date_sum FROM sum_item_cashReg si JOIN item_cashReg i ON si.id_item = i.idint_item JOIN sum_cashReg s ON si.id_sum=s.idint_sum WHERE idext_sum = ? GROUP BY idint_sum', [idext_sum], function(error, results, fields) {
+        connection.query('SELECT idext_sum, COALESCE(SUM(value_item * quantity_sum),0) as total_sum, date_sum FROM sum_item_cashReg si JOIN item_cashReg i ON si.id_item = i.idint_item RIGHT JOIN sum_cashReg s ON si.id_sum=s.idint_sum WHERE idext_sum = ? GROUP BY idint_sum', [idext_sum], function(error, results, fields) {
             
             if(error) res.send(error);
             else {
-                connection.query('SELECT name_item, quantity_sum, value_item, (quantity_sum * value_item) as total_item FROM sum_item_cashReg si JOIN sum_cashReg s ON si.id_sum = s.idint_sum JOIN item_cashReg i ON si.id_item = i.idint_item WHERE idext_sum = ? ', [idext_sum], function(error, resultItem, fields) {
+                connection.query('SELECT name_item, quantity_sum, value_item, COALESCE((value_item * quantity_sum),0) as total_item FROM sum_item_cashReg si JOIN sum_cashReg s ON si.id_sum = s.idint_sum JOIN item_cashReg i ON si.id_item = i.idint_item WHERE idext_sum = ? ', [idext_sum], function(error, resultItem, fields) {
 
                     if(error) res.send(error);
                     else {
@@ -43,7 +43,7 @@ router.get('/:idext_sum', function(req, res, next) {
                         }
                         retfunc(results);
                     }
-
+                    
                 });
             }
 

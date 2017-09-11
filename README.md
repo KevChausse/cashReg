@@ -1,6 +1,6 @@
 # cashReg
 
-Version : 0.1.0
+Version : 0.1.5
 
 ## Technologies utilisées
 
@@ -22,3 +22,5 @@ Le lancement de l'application se fait : `npm start` ou `nodemon` depuis le dossi
 L'url d'accès à l'api est la suivante: `http://localhost:3000/`
 
 Pour la gestion des items: `http://localhost:3000/items/`
+
+Pour la gestion des additions: `http://localhost:3000/sums/`
