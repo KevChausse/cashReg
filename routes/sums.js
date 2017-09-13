@@ -105,13 +105,22 @@ router.post('/:idext_sum', function(req, res, next) {
                 if(error) res.send(error);
                 else {
                     connection.query('SELECT idint_item FROM item_cashReg WHERE idext_item = ?', [idext_item], function(error, results_iditem, fields) {
-    
                         if(error) res.send(error)
                         else if(results_idsum.length > 0 && results_iditem.length > 0){
-                            connection.query('INSERT INTO sum_item_cashReg (id_sum, id_item, quantity_sum) VALUES (?, ?, ?)', [results_idsum[0]['idint_sum'], results_iditem[0]['idint_item'], qty_item], function(error, results, fields) {
-                                if(error) res.send(error);
-                                else retfunc(results);
-
+                            // test n'existe pas, sinon ajouter quantity
+                            connection.query('SELECT quantity_sum FROM sum_item_cashReg WHERE id_item = ? AND id_sum = ?', [results_iditem[0]['idint_item'], results_idsum[0]['idint_sum']], function(error, results_sum, fields) {
+                                if(results_sum.length > 0){
+                                    connection.query('UPDATE sum_item_cashReg SET quantity_sum = quantity_sum + ? WHERE id_item = ? AND id_sum = ?', [qty_item, results_iditem[0]['idint_item'], results_idsum[0]['idint_sum']], function(error, results, fields) {
+                                        if(error) res.send(error);
+                                        else retfunc(results);
+                                    });
+                                }
+                                else {
+                                    connection.query('INSERT INTO sum_item_cashReg (id_sum, id_item, quantity_sum) VALUES (?, ?, ?)', [results_idsum[0]['idint_sum'], results_iditem[0]['idint_item'], qty_item], function(error, results, fields) {
+                                        if(error) res.send(error);
+                                        else retfunc(results);
+                                    });
+                                }
                             });
                         }
                         else {
