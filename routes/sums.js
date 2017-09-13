@@ -196,8 +196,6 @@ router.delete('/:idext_sum', function(req, res, next) {
         });
     }
 
-
-
     deleteSumItem(function(results) {
         res.json(results);
     });
