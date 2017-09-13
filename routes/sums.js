@@ -94,7 +94,43 @@ router.post('/', function(req, res, next) {
 
 /* POST new sum item. */
 router.post('/:idext_sum', function(req, res, next) {
+    idext_sum = req.params.idext_sum;
+    idext_item = req.body.idext_item;
+    qty_item = req.body.qty_item;
+    
+    var postSumItem = function(retfunc){
+        if( !Number.isNaN(idext_sum) && idext_sum>0 && !Number.isNaN(idext_item) && idext_item>0 && !Number.isNaN(qty_item) && qty_item>0 ){
+            connection.query('SELECT idint_sum FROM sum_cashReg WHERE idext_sum = ?', [idext_sum], function(error, results_idsum, fields) {
+                
+                if(error) res.send(error);
+                else {
+                    connection.query('SELECT idint_item FROM item_cashReg WHERE idext_item = ?', [idext_item], function(error, results_iditem, fields) {
+    
+                        if(error) res.send(error)
+                        else if(results_idsum.length > 0 && results_iditem.length > 0){
+                            connection.query('INSERT INTO sum_item_cashReg (id_sum, id_item, quantity_sum) VALUES (?, ?, ?)', [results_idsum[0]['idint_sum'], results_iditem[0]['idint_item'], qty_item], function(error, results, fields) {
+                                if(error) res.send(error);
+                                else retfunc(results);
 
+                            });
+                        }
+                        else {
+                            if(results_idsum.length <= 0){
+                                res.send("L'id d'addition renseigné est invalide");
+                            }
+                            else {
+                                res.send("L'id d'item renseigné est invalide");
+                            }
+                        }
+                    });
+                }
+            });
+        }
+    }
+
+    postSumItem(function(results) {
+        res.json(results);
+    });
 });
 
 
