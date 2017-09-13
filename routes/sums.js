@@ -64,17 +64,24 @@ router.post('/', function(req, res, next) {
     idext_sum = req.body.idext_sum;
 
     var postSum = function(retfunc){
-        if( !Number.isNaN(idext_sum) ){
-            connection.query('INSERT INTO sum_cashReg (idext_sum) VALUES (?)', [idext_sum], function(error, results, fields) {
-                
-                if(error) res.send(error);
-                else retfunc(results);
+        connection.query('SELECT idext_sum FROM sum_cashReg WHERE idext_sum = ?', [idext_sum], function(error, results_idext, fields) {
+            if(results_idext.length <= 0){
+                if( !Number.isNaN(idext_sum) && idext_sum>0 ){
+                    connection.query('INSERT INTO sum_cashReg (idext_sum) VALUES (?)', [idext_sum], function(error, results, fields) {
+                        
+                        if(error) res.send(error);
+                        else retfunc(results);
 
-            });
-        }
-        else {
-            res.send("Erreur de format de valeur.");
-        }
+                    });
+                }
+                else {
+                    res.send("Erreur de format de valeur.");
+                }
+            }
+            else {
+                res.send("Erreur - L'id renseigné existe déja.");
+            }
+        })
     }
 
     postSum(function(results) {

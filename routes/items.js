@@ -52,16 +52,24 @@ router.post('/', function(req, res, next) {
     var value_item = req.body.value_item;
     var quantity_item = req.body.quantity_item;
 
+
     var postItem = function(retfunc){
-        if( !Number.isNaN(idext_item) && idext_item>0 && !Number.isNaN(quantity_item) && quantity_item>=-1 && !Number.isNaN(value_item) && value_item>=0 ){  
-            connection.query('INSERT INTO item_cashReg (idext_item, name_item, description_item, value_item, quantity_item) VALUES (?, ?, ?, ?, ?)', [idext_item, name_item, description_item, value_item, quantity_item], function(error, results, fields) {
-                if(error) res.send(error);
-                else retfunc(results);
-            });
-        }
-        else {
-            res.send("Erreur de format de valeur.");
-        }
+        connection.query('SELECT idext_item FROM item_cashReg WHERE idext_item = ?', [idext_item], function(error, results_idext, fields) {
+            if(results_idext.length <= 0){
+                if( !Number.isNaN(idext_item) && idext_item>0 && !Number.isNaN(quantity_item) && quantity_item>=-1 && !Number.isNaN(value_item) && value_item>=0 ){  
+                    connection.query('INSERT INTO item_cashReg (idext_item, name_item, description_item, value_item, quantity_item) VALUES (?, ?, ?, ?, ?)', [idext_item, name_item, description_item, value_item, quantity_item], function(error, results, fields) {
+                        if(error) res.send(error);
+                        else retfunc(results);
+                    });
+                }
+                else {
+                    res.send("Erreur de format de valeur.");
+                }
+            }
+            else {
+                res.send("Erreur - L'id renseigné existe déja.");
+            }
+        })
     }
 
     postItem(function(results) {
