@@ -1,6 +1,6 @@
 # cashReg
 
-Version : 0.1.7
+Version : 0.1.10
 
 ## Technologies utilisées
 

@@ -146,7 +146,61 @@ router.post('/:idext_sum', function(req, res, next) {
 
 /* DELETE sum item or sum. */
 router.delete('/:idext_sum', function(req, res, next) {
+    idext_sum = req.params.idext_sum;
+    idext_item = req.body.idext_item;
 
+
+    var deleteSumItem = function(retfunc){
+        connection.query('SELECT idint_sum FROM sum_cashReg WHERE idext_sum = ?', [idext_sum], function(error, results_idsum, fields) {     
+            if(error) res.send(error);
+            else if(results_idsum.length > 0){
+                if(idext_item){
+                    connection.query('SELECT idint_item FROM item_cashReg WHERE idext_item = ?', [idext_item], function(error, results_iditem, fields) {     
+                        if(error) res.send(error);
+                        else if(results_iditem.length > 0){
+                            connection.query('SELECT quantity_sum FROM sum_item_cashReg WHERE id_item = ? AND id_sum = ?', [results_iditem[0]['idint_item'], results_idsum[0]['idint_sum']], function(error, results_qty, fields) {     
+                                if(error) res.send(error);
+                                else if(results_qty.length > 0){
+                                    if(results_qty[0]['quantity_sum'] == 1){
+                                        connection.query('DELETE FROM sum_item_cashReg WHERE id_sum = ? AND id_item = ?', [results_idsum[0]['idint_sum'], results_iditem[0]['idint_item']], function(error, results, fields) {
+                                            if(error) res.send(error);
+                                            else retfunc(results);
+                                        });
+                                    }
+                                    else{
+                                        connection.query('UPDATE sum_item_cashReg SET quantity_sum = quantity_sum - 1 WHERE id_item = ? AND id_sum = ?', [results_iditem[0]['idint_item'], results_idsum[0]['idint_sum']], function(error, results, fields) {
+                                            if(error) res.send(error);
+                                            else retfunc(results);
+                                        });
+                                    }
+                                }
+                                else {
+                                    res.send("Erreur - Id item innexistant");
+                                }
+                            });
+                        }
+                        else res.send("Erreur - Id innexistant");
+                    });
+                }
+                else {
+                        connection.query('DELETE FROM sum_item_cashReg WHERE id_sum = ? ', [results_idsum[0]['idint_sum']], function(error, results, fields) {
+                            if(error) res.send(error);
+                            else connection.query('DELETE FROM sum_cashReg WHERE idint_sum = ? ', [results_idsum[0]['idint_sum']], function(error, results, fields) {
+                                if(error) res.send(error);
+                                else retfunc(results);
+                            });
+                        });
+                }
+            }
+            else res.send("Erreur - Id sum innexistant");
+        });
+    }
+
+
+
+    deleteSumItem(function(results) {
+        res.json(results);
+    });
 });
 
 module.exports = router;
