@@ -1,6 +1,6 @@
 # cashReg
 
-Version : 0.2.0
+Version : 0.2.1
 
 ## Technologies utilisées
 
@@ -12,6 +12,7 @@ MySQL
 ### Base de données
 
 Exécuter le fichier `cashReg_db.sql` dans votre base de données
+Attention, il est possible que certains paramètres soient à modifier. Pour cela, rendez-vous dans le fichier `/lib/connection.js`
 
 ### Lancement de l'application
 
