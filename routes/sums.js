@@ -54,7 +54,6 @@ router.get('/:idext_sum', function(req, res, next) {
         res.json(results);
     });
 
-
 });
 
 
