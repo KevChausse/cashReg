@@ -31,6 +31,22 @@ CREATE TABLE IF NOT EXISTS sum_item_cashReg (
 ) ENGINE=InnoDB;
 
 
+CREATE TABLE IF NOT EXISTS categorie_cashReg (
+	idint_categorie int PRIMARY KEY AUTO_INCREMENT,
+	idext_categorie int,
+	name_categorie varchar(20),
+	description_categorie text
+) ENGINE=InnoDB;
+
+
+CREATE TABLE IF NOT EXISTS categorie_item_cashReg (
+	id_item int,
+	id_categorie int,
+	FOREIGN KEY (id_item) REFERENCES item_cashReg(idint_item),
+	FOREIGN KEY (id_categorie) REFERENCES categorie_cashReg(idint_categorie)
+) ENGINE=InnoDB;
+
+
 
 
 /* INSERTION DE QUELQUES DONNEES DE BASE */
@@ -54,3 +70,16 @@ INSERT INTO sum_item_cashReg (id_item, id_sum, quantity_sum) VALUES
 	(3,1,1),
 	(1,2,1),
 	(3,2,5);
+
+
+
+INSERT INTO categorie_cashReg (idext_categorie, name_categorie, description_categorie) VALUES 
+	(45678,'Categorie 1', 'ceci est une categorie'),
+	(56789,'Categorie 2', 'ceci est une deuxieme categorie');
+
+
+
+INSERT INTO categorie_item_cashReg (id_categorie, id_item) VALUES 
+	(1,1),
+	(2,3),
+	(1,2);
