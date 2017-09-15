@@ -25,7 +25,7 @@ router.get('/', function(req, res, next) {
 
 
 
-/* GET sum detail. */
+/* GET categorie detail. */
 router.get('/:idext_categorie', function(req, res, next) {
     idext_categorie = req.params.idext_categorie
 
@@ -54,6 +54,40 @@ router.get('/:idext_categorie', function(req, res, next) {
         res.json(results);
     });
 
+});
+
+
+
+/* POST new categorie. */
+router.post('/', function(req, res, next) {
+    idext_categorie = req.body.idext_categorie;
+    name_categorie = req.body.name_categorie;
+    description_categorie = req.body.description_categorie;
+
+    var postCategorie = function(retfunc){
+        connection.query('SELECT idext_categorie FROM categorie_cashReg WHERE idext_categorie = ?', [idext_categorie], function(error, results_idext, fields) {
+            if(results_idext.length <= 0){
+                if( !Number.isNaN(idext_categorie) && idext_categorie>0 ){
+                    connection.query('INSERT INTO categorie_cashReg (idext_categorie, name_categorie, description_categorie) VALUES (?, ?, ?)', [idext_categorie, name_categorie, description_categorie], function(error, results, fields) {
+                        
+                        if(error) res.send(error);
+                        else retfunc(results);
+
+                    });
+                }
+                else {
+                    res.send("Erreur de format de valeur.");
+                }
+            }
+            else {
+                res.send("Erreur - L'id renseigné existe déja.");
+            }
+        })
+    }
+
+    postCategorie(function(results) {
+        res.json(results);
+    });
 
 });
 
