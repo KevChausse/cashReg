@@ -133,6 +133,9 @@ router.post('/:idext_sum', function(req, res, next) {
                 }
             });
         }
+        else {
+            res.send("Le format d'une valeur est invalide");
+        }
     }
 
     postSumItem(function(results) {

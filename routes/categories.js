@@ -92,4 +92,53 @@ router.post('/', function(req, res, next) {
 });
 
 
+
+/* POST new categorie item. */
+router.post('/:idext_categorie', function(req, res, next) {
+    idext_categorie = req.params.idext_categorie;
+    idext_item = req.body.idext_item;
+  
+    var postCategorieItem = function(retfunc){
+        if( !Number.isNaN(idext_categorie) && idext_categorie>0 && !Number.isNaN(idext_item) && idext_item>0 ){
+            connection.query('SELECT idint_categorie FROM categorie_cashReg WHERE idext_categorie = ?', [idext_categorie], function(error, results_idcat, fields) {      
+                if(error) res.send(error);
+                else {
+                    connection.query('SELECT idint_item FROM item_cashReg WHERE idext_item = ?', [idext_item], function(error, results_iditem, fields) {
+                        if(error) res.send(error)
+                        else if(results_idcat.length > 0 && results_iditem.length > 0){
+                            connection.query('SELECT * FROM categorie_item_cashReg WHERE id_item = ? AND id_categorie = ?', [results_iditem[0]['idint_item'], results_idcat[0]['idint_categorie']], function(error, results_cat, fields) {
+                                if(results_cat.length > 0){
+                                    res.send("L'item a deja été ajouté à la catégorie");
+                                }
+                                else {
+                                    connection.query('INSERT INTO categorie_item_cashReg (id_categorie, id_item) VALUES (?, ?)', [results_idcat[0]['idint_categorie'], results_iditem[0]['idint_item']], function(error, results, fields) {
+                                        if(error) res.send(error);
+                                        else retfunc(results);
+                                    });
+                                }
+                            });
+                        }
+                        else {
+                            if(results_idcat.length <= 0){
+                                res.send("L'id d'addition renseigné est invalide");
+                            }
+                            else {
+                                res.send("L'id d'item renseigné est invalide");
+                            }
+                        }
+                    });
+                }
+            });
+        }
+        else {
+            res.send("Le format d'une valeur est invalide");
+        }
+    }
+
+    postCategorieItem(function(results) {
+        res.json(results);
+    });
+});
+
+
 module.exports = router;
