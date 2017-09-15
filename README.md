@@ -26,3 +26,5 @@ L'url d'accès à l'api est la suivante: `http://localhost:3000/`
 Pour la gestion des items: `http://localhost:3000/items/`
 
 Pour la gestion des additions: `http://localhost:3000/sums/`
+
+Pour la gestion des categories: `http://localhost:3000/categories/`
