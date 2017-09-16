@@ -123,4 +123,29 @@ router.put('/:idext_user', function(req, res, next) {
 
 
 
+/* DELETE user. */
+router.delete('/:idext_user', function(req, res, next) {
+
+    var idext_user = req.params.idext_user;
+
+    var deleteUser = function(retfunc){
+        if( idext_user && !Number.isNaN(idext_user) && idext_user>0 ){
+            connection.query('DELETE FROM user_cashReg WHERE idext_user = ?', [idext_user], function(error, results, fields) {
+                if(error) res.send(error);
+                else retfunc(results);
+            });
+        }
+        else {
+            res.send("Erreur de format - L'id doit être un nombre");
+        }
+    }
+
+    deleteUser(function(results) {
+        res.json(results);
+    });
+
+});
+
+
+
 module.exports = router;
