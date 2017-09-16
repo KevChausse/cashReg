@@ -84,4 +84,43 @@ router.post('/', function(req, res, next) {
 });
 
 
+
+/* PUT user. */
+router.put('/:idext_user', function(req, res, next) {
+
+    var idext_user = req.params.idext_user;
+    var fname_user =  req.body.fname_user;
+    var lname_user = req.body.lname_user;
+    var email_user = req.body.email_user;
+    var birthdate_user = req.body.birthdate_user;
+
+    var putUser = function(retfunc){
+        if( !Number.isNaN(idext_user) && idext_user>0 && validator.isEmail(email_user) && validator.isISO8601(birthdate_user) ){  
+            
+            connection.query('SELECT email_user FROM user_cashReg WHERE email_user = ? AND idext_user != ?', [email_user, idext_user], function(error, results_idext, fields) {
+                if(results_idext.length <= 0){
+                    connection.query('UPDATE user_cashReg SET fname_user = ?, lname_user = ?, email_user = ?, birthdate_user = ? WHERE idext_user = ?', [fname_user, lname_user, email_user, birthdate_user, idext_user], function(error, results, fields) {
+                        if(error) res.send(error);
+                        else retfunc(results);
+                    });
+                }
+                else {
+                    res.send("Erreur - L'id ou email renseigné existe déja.");
+                }
+                
+            })
+        }
+        else {
+            res.send("Erreur de format de valeur.");
+        }
+    }
+
+    putUser(function(results) {
+        res.json(results);
+    });
+
+});
+
+
+
 module.exports = router;
