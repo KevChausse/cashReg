@@ -47,6 +47,16 @@ CREATE TABLE IF NOT EXISTS categorie_item_cashReg (
 ) ENGINE=InnoDB;
 
 
+CREATE TABLE IF NOT EXISTS user_cashReg (
+	idint_user int PRIMARY KEY AUTO_INCREMENT,
+	idext_user int,
+	fname_user varchar(20),
+	lname_user varchar(20),
+	email_user varchar(40),
+	birthdate_user date
+) ENGINE=InnoDB;
+
+
 
 
 /* INSERTION DE QUELQUES DONNEES DE BASE */
@@ -83,3 +93,9 @@ INSERT INTO categorie_item_cashReg (id_categorie, id_item) VALUES
 	(1,1),
 	(2,3),
 	(1,2);
+
+
+
+INSERT INTO user_cashReg (idext_user, fname_user, lname_user, email_user, birthdate_user) VALUES 
+	(7384, "Pierre", "Dupont", "pierre.d@yahoo.fr", "1992-12-03"),
+	(9384, "Michel", "Martin", "m.martin@gmail.com", "1987-03-21");
