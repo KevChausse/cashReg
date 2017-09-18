@@ -3,13 +3,13 @@ var router = express.Router();
 
 var connection = require('../lib/connection');
 
-// Sum management part
+// Registers management part
 
-/* GET sum listing. */ 
+/* GET register listing. */ /*
 router.get('/', function(req, res, next) {
-/*
-    var getSumsList = function(retfunc){
-        connection.query('SELECT idext_sum, COALESCE(SUM(value_item * quantity_sum),0) as total_sum, date_sum FROM sum_cashReg s LEFT JOIN sum_item_cashReg si ON si.id_sum=s.idint_sum LEFT JOIN item_cashReg i ON si.id_item = i.idint_item GROUP BY idint_sum', function(error, results, fields) {
+
+    var getRegistersList = function(retfunc){
+        connection.query('SELECT idext_user, idext_categorie, fname_user, lname_user, name_categorie FROM register_cashReg r LEFT JOIN user_cashReg u ON r.id_user=u.idint_user LEFT JOIN categorie_cashReg c ON r.id_categorie = c.idint_categorie', function(error, results, fields) {
             
             if(error) res.send(error);
             else retfunc(results);
@@ -17,19 +17,19 @@ router.get('/', function(req, res, next) {
         });
     }
 
-    getSumsList(function(results) {
+    getRegistersList(function(results) {
         res.json(results);
     });
-*/
+
 });
+*/
 
 
-
-/* GET sum detail. */ /*
-router.get('/:idext_sum', function(req, res, next) {
+/* GET register detail. */ /*
+router.get('/:idext_register', function(req, res, next) {
     idext_sum = req.params.idext_sum
 
-    var getSumsItem = function(retfunc){
+    var getRegisterDetail = function(retfunc){
         connection.query('SELECT idext_sum, COALESCE(SUM(value_item * quantity_sum),0) as total_sum, date_sum FROM sum_item_cashReg si JOIN item_cashReg i ON si.id_item = i.idint_item RIGHT JOIN sum_cashReg s ON si.id_sum=s.idint_sum WHERE idext_sum = ? GROUP BY idint_sum', [idext_sum], function(error, results, fields) {
             
             if(error) res.send(error);
@@ -50,7 +50,7 @@ router.get('/:idext_sum', function(req, res, next) {
         });
     }
 
-    getSumsItem(function(results) {
+    getRegisterDetail(function(results) {
         res.json(results);
     });
 

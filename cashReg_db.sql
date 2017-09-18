@@ -58,10 +58,25 @@ CREATE TABLE IF NOT EXISTS user_cashReg (
 
 
 CREATE TABLE IF NOT EXISTS register_cashReg (
-	id_user int,
+	idint_register int PRIMARY KEY AUTO_INCREMENT,
+	idext_register int,
+	name_register varchar(20)
+) ENGINE=InnoDB;
+
+
+CREATE TABLE IF NOT EXISTS categorie_register_cashReg (
+	id_register int,
 	id_categorie int,
-	FOREIGN KEY (id_user) REFERENCES user_cashReg(idint_user),
+	FOREIGN KEY (id_register) REFERENCES register_cashReg(idint_register),
 	FOREIGN KEY (id_categorie) REFERENCES categorie_cashReg(idint_categorie)
+) ENGINE=InnoDB;
+
+
+CREATE TABLE IF NOT EXISTS user_register_cashReg (
+	id_register int,
+	id_user int,
+	FOREIGN KEY (id_register) REFERENCES register_cashReg(idint_register),
+	FOREIGN KEY (id_user) REFERENCES user_cashReg(idint_user)
 ) ENGINE=InnoDB;
 
 
@@ -110,7 +125,20 @@ INSERT INTO user_cashReg (idext_user, fname_user, lname_user, email_user, birthd
 
 
 
-INSERT INTO register_cashReg (id_user, id_categorie) VALUES 
+INSERT INTO register_cashReg (idext_register, name_register) VALUES 
+	(1212,"Caisse 1"),
+	(2321,"Caise 2");
+
+
+
+INSERT INTO categorie_register_cashReg (id_categorie, id_register) VALUES 
 	(1,1),
 	(2,1),
 	(1,2);
+
+
+
+INSERT INTO user_register_cashReg (id_user, id_register) VALUES 
+	(1,1),
+	(1,2),
+	(2,2);
