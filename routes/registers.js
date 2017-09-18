@@ -5,11 +5,11 @@ var connection = require('../lib/connection');
 
 // Registers management part
 
-/* GET register listing. */ /*
+/* GET register listing. */
 router.get('/', function(req, res, next) {
 
     var getRegistersList = function(retfunc){
-        connection.query('SELECT idext_user, idext_categorie, fname_user, lname_user, name_categorie FROM register_cashReg r LEFT JOIN user_cashReg u ON r.id_user=u.idint_user LEFT JOIN categorie_cashReg c ON r.id_categorie = c.idint_categorie', function(error, results, fields) {
+        connection.query('SELECT idext_register, name_register FROM register_cashReg', function(error, results, fields) {
             
             if(error) res.send(error);
             else retfunc(results);
@@ -22,7 +22,7 @@ router.get('/', function(req, res, next) {
     });
 
 });
-*/
+
 
 
 /* GET register detail. */ /*
