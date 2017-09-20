@@ -127,7 +127,7 @@ INSERT INTO user_cashReg (idext_user, fname_user, lname_user, email_user, birthd
 
 INSERT INTO register_cashReg (idext_register, name_register) VALUES 
 	(1212,"Caisse 1"),
-	(2321,"Caise 2");
+	(2321,"Caisse 2");
 
 
 

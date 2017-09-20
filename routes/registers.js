@@ -66,15 +66,16 @@ router.get('/:idext_register', function(req, res, next) {
 
 
 
-/* POST new sum. */ /*
+/* POST new register. */ 
 router.post('/', function(req, res, next) {
-    idext_sum = req.body.idext_sum;
+    idext_register = req.body.idext_register;
+    name_register = req.body.name_register;
 
-    var postSum = function(retfunc){
-        connection.query('SELECT idext_sum FROM sum_cashReg WHERE idext_sum = ?', [idext_sum], function(error, results_idext, fields) {
+    var postRegister = function(retfunc){
+        connection.query('SELECT idext_register FROM register_cashReg WHERE idext_register = ?', [idext_register], function(error, results_idext, fields) {
             if(results_idext.length <= 0){
-                if( !Number.isNaN(idext_sum) && idext_sum>0 ){
-                    connection.query('INSERT INTO sum_cashReg (idext_sum) VALUES (?)', [idext_sum], function(error, results, fields) {
+                if( !Number.isNaN(idext_register) && idext_register>0 ){
+                    connection.query('INSERT INTO register_cashReg (idext_register, name_register) VALUES (?, ?)', [idext_register, name_register], function(error, results, fields) {
                         
                         if(error) res.send(error);
                         else retfunc(results);
@@ -91,12 +92,12 @@ router.post('/', function(req, res, next) {
         })
     }
 
-    postSum(function(results) {
+    postRegister(function(results) {
         res.json(results);
     });
 
 });
-*/
+
 
 
 /* POST new sum item. */ /*
