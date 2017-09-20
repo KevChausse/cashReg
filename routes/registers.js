@@ -100,45 +100,78 @@ router.post('/', function(req, res, next) {
 
 
 
-/* POST new sum item. */ /*
-router.post('/:idext_sum', function(req, res, next) {
-    idext_sum = req.params.idext_sum;
-    idext_item = req.body.idext_item;
-    qty_item = req.body.qty_item;
+/* POST new sum item. */ 
+router.post('/:idext_register', function(req, res, next) {
+    idext_register = req.params.idext_register;
+    id_categorie = req.body.id_categorie;
+    id_user = req.body.id_user;
     
-    var postSumItem = function(retfunc){
-        if( !Number.isNaN(idext_sum) && idext_sum>0 && !Number.isNaN(idext_item) && idext_item>0 && !Number.isNaN(qty_item) && qty_item>0 ){
-            connection.query('SELECT idint_sum FROM sum_cashReg WHERE idext_sum = ?', [idext_sum], function(error, results_idsum, fields) {
+    var postRegisterDetail = function(retfunc){
+        if( !Number.isNaN(idext_register) && idext_register>0 && ((!Number.isNaN(id_categorie) && id_categorie>0) || (!Number.isNaN(id_user) && id_user>0)) ){
+            connection.query('SELECT idint_register FROM register_cashReg WHERE idext_register = ?', [idext_register], function(error, resultsReg, fields) {
                 
                 if(error) res.send(error);
                 else {
-                    connection.query('SELECT idint_item FROM item_cashReg WHERE idext_item = ?', [idext_item], function(error, results_iditem, fields) {
-                        if(error) res.send(error)
-                        else if(results_idsum.length > 0 && results_iditem.length > 0){
-                            connection.query('SELECT quantity_sum FROM sum_item_cashReg WHERE id_item = ? AND id_sum = ?', [results_iditem[0]['idint_item'], results_idsum[0]['idint_sum']], function(error, results_sum, fields) {
-                                if(results_sum.length > 0){
-                                    connection.query('UPDATE sum_item_cashReg SET quantity_sum = quantity_sum + ? WHERE id_item = ? AND id_sum = ?', [qty_item, results_iditem[0]['idint_item'], results_idsum[0]['idint_sum']], function(error, results, fields) {
+                    if(id_categorie && resultsReg.length > 0){
+                        connection.query('SELECT idint_categorie FROM categorie_cashReg WHERE idext_categorie = ?', [id_categorie], function(error, resultsCat, fields) {
+                            if(error) res.send(error)
+                            else {
+                                if(resultsCat.length > 0){
+                                    connection.query('SELECT id_categorie FROM categorie_register_cashReg WHERE id_categorie = ? AND id_register = ?', [resultsCat[0]['idint_categorie'], resultsReg[0]['idint_register']], function(error, resultsId, fields) {  
                                         if(error) res.send(error);
-                                        else retfunc(results);
+                                        else if(resultsId.length > 0){
+                                            res.send("La categorie a déja été ajoutée");
+                                        }
+                                        else {
+                                            connection.query('INSERT INTO categorie_register_cashReg (id_categorie, id_register) VALUES (?, ?)', [resultsCat[0]['idint_categorie'], resultsReg[0]['idint_register']], function(error, results, fields) {
+                                                if(error) res.send(error);
+                                                else retfunc(results);
+                                            });
+                                        }
                                     });
                                 }
                                 else {
-                                    connection.query('INSERT INTO sum_item_cashReg (id_sum, id_item, quantity_sum) VALUES (?, ?, ?)', [results_idsum[0]['idint_sum'], results_iditem[0]['idint_item'], qty_item], function(error, results, fields) {
+                                    res.send("La categorie n'existe pas");
+                                }
+                            }
+                        })
+                    }
+                    else if(id_user && resultsReg.length > 0){
+                        connection.query('SELECT idint_user FROM user_cashReg WHERE idext_user = ?', [id_user], function(error, resultsUser, fields) {
+                            if(error) res.send(error)
+                            else {
+                                if(resultsUser.length > 0){
+                                    connection.query('SELECT id_user FROM user_register_cashReg WHERE id_user = ? AND id_register = ?', [resultsUser[0]['idint_user'], resultsReg[0]['idint_register']], function(error, resultsId, fields) {  
                                         if(error) res.send(error);
-                                        else retfunc(results);
+                                        else if(resultsId.length > 0){
+                                            res.send("L'utilisateur a déja été ajoutée");
+                                        }
+                                        else {
+                                            connection.query('INSERT INTO user_register_cashReg (id_user, id_register) VALUES (?, ?)', [resultsUser[0]['idint_user'], resultsReg[0]['idint_register']], function(error, results, fields) {
+                                                if(error) res.send(error);
+                                                else retfunc(results);
+                                            });
+                                        }
                                     });
                                 }
-                            });
-                        }
-                        else {
-                            if(results_idsum.length <= 0){
-                                res.send("L'id d'addition renseigné est invalide");
+                                else {
+                                    res.send("L'utilisateur n'existe pas");
+                                }
                             }
-                            else {
-                                res.send("L'id d'item renseigné est invalide");
-                            }
+                        })
+                    }
+                    else {
+                        if(resultsReg.length > 0){
+                            res.send("L'id de caisse renseigné est invalide");
                         }
-                    });
+                        else if(id_categorie){
+                            res.send("L'id de categorie renseigné est invalide");
+                        }
+                        else{
+                            res.send("L'id de utilisateur renseigné est invalide");
+                        }
+                        
+                    }
                 }
             });
         }
@@ -147,11 +180,11 @@ router.post('/:idext_sum', function(req, res, next) {
         }
     }
 
-    postSumItem(function(results) {
+    postRegisterDetail(function(results) {
         res.json(results);
     });
 });
-*/
+
 
 
 /* DELETE sum item or sum. */ /*
