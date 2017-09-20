@@ -25,23 +25,31 @@ router.get('/', function(req, res, next) {
 
 
 
-/* GET register detail. */ /*
+/* GET register detail. */ 
 router.get('/:idext_register', function(req, res, next) {
-    idext_sum = req.params.idext_sum
+    idext_register = req.params.idext_register
 
     var getRegisterDetail = function(retfunc){
-        connection.query('SELECT idext_sum, COALESCE(SUM(value_item * quantity_sum),0) as total_sum, date_sum FROM sum_item_cashReg si JOIN item_cashReg i ON si.id_item = i.idint_item RIGHT JOIN sum_cashReg s ON si.id_sum=s.idint_sum WHERE idext_sum = ? GROUP BY idint_sum', [idext_sum], function(error, results, fields) {
+        connection.query('SELECT idext_register, name_register FROM register_cashReg WHERE idext_register = ?', [idext_register], function(error, results, fields) {
             
             if(error) res.send(error);
             else {
-                connection.query('SELECT name_item, quantity_sum, value_item, COALESCE((value_item * quantity_sum),0) as total_item FROM sum_item_cashReg si JOIN sum_cashReg s ON si.id_sum = s.idint_sum JOIN item_cashReg i ON si.id_item = i.idint_item WHERE idext_sum = ? ', [idext_sum], function(error, resultItem, fields) {
+                connection.query('SELECT name_categorie FROM categorie_register_cashReg cr JOIN register_cashReg r ON cr.id_register = r.idint_register JOIN categorie_cashReg c ON cr.id_categorie = c.idint_categorie WHERE idext_register = ?', [idext_register], function(error, resultCateg, fields) {
 
                     if(error) res.send(error);
                     else {
-                        if(resultItem.length>0){
-                            results[0]['items'] = resultItem
-                        }
-                        retfunc(results);
+                        connection.query('SELECT fname_user, lname_user FROM user_register_cashReg ur JOIN register_cashReg r ON ur.id_register = r.idint_register JOIN user_cashReg u ON ur.id_user = u.idint_user WHERE idext_register = ?', [idext_register], function(error, resultUser, fields) {
+                            if(error) res.send(error);
+                            else {
+                                if(resultCateg.length>0){
+                                    results[0]['categories'] = resultCateg
+                                }
+                                if(resultUser.length>0){
+                                    results[0]['users'] = resultUser
+                                }
+                                retfunc(results);
+                            }
+                        });
                     }
                     
                 });
@@ -55,7 +63,7 @@ router.get('/:idext_register', function(req, res, next) {
     });
 
 });
-*/
+
 
 
 /* POST new sum. */ /*
