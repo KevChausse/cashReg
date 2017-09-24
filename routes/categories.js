@@ -152,7 +152,6 @@ router.delete('/:idext_categorie', function(req, res, next) {
         connection.query('SELECT idint_categorie FROM categorie_cashReg WHERE idext_categorie = ?', [idext_categorie], function(error, results_idcat, fields) {     
             if(error) res.send(error);
             else if(results_idcat.length > 0){
-                ///////////
                 if(idext_item){
                     connection.query('SELECT idint_item FROM item_cashReg WHERE idext_item = ?', [idext_item], function(error, results_iditem, fields) {     
                         if(error) res.send(error);

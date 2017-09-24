@@ -187,61 +187,94 @@ router.post('/:idext_register', function(req, res, next) {
 
 
 
-/* DELETE sum item or sum. */ /*
-router.delete('/:idext_sum', function(req, res, next) {
-    idext_sum = req.params.idext_sum;
-    idext_item = req.body.idext_item;
+/* DELETE register or register's categorie or user. */ 
+router.delete('/:idext_register', function(req, res, next) {
+    idext_register = req.params.idext_register;
+    id_categorie = req.body.id_categorie;
+    id_user = req.body.id_user;
 
 
-    var deleteSumItem = function(retfunc){
-        connection.query('SELECT idint_sum FROM sum_cashReg WHERE idext_sum = ?', [idext_sum], function(error, results_idsum, fields) {     
-            if(error) res.send(error);
-            else if(results_idsum.length > 0){
-                if(idext_item){
-                    connection.query('SELECT idint_item FROM item_cashReg WHERE idext_item = ?', [idext_item], function(error, results_iditem, fields) {     
-                        if(error) res.send(error);
-                        else if(results_iditem.length > 0){
-                            connection.query('SELECT quantity_sum FROM sum_item_cashReg WHERE id_item = ? AND id_sum = ?', [results_iditem[0]['idint_item'], results_idsum[0]['idint_sum']], function(error, results_qty, fields) {     
-                                if(error) res.send(error);
-                                else if(results_qty.length > 0){
-                                    if(results_qty[0]['quantity_sum'] == 1){
-                                        connection.query('DELETE FROM sum_item_cashReg WHERE id_sum = ? AND id_item = ?', [results_idsum[0]['idint_sum'], results_iditem[0]['idint_item']], function(error, results, fields) {
-                                            if(error) res.send(error);
-                                            else retfunc(results);
-                                        });
-                                    }
-                                    else{
-                                        connection.query('UPDATE sum_item_cashReg SET quantity_sum = quantity_sum - 1 WHERE id_item = ? AND id_sum = ?', [results_iditem[0]['idint_item'], results_idsum[0]['idint_sum']], function(error, results, fields) {
-                                            if(error) res.send(error);
-                                            else retfunc(results);
-                                        });
-                                    }
+    var deleteRegister = function(retfunc){
+        if(!Number.isNaN(idext_register) && idext_register > 0){
+            connection.query('SELECT idint_register FROM register_cashReg WHERE idext_register = ? ', [idext_register], function(error, resultsReg, fields) {
+                if(error) res.send(error)
+                else {
+                    if(!Number.isNaN(id_categorie) && id_categorie > 0){
+                        console.log("01")
+                        connection.query('SELECT idint_categorie FROM categorie_cashReg WHERE idext_categorie = ? ', [id_categorie], function(error, resultsCat, fields) {
+                            if(error) res.send(error)
+                            else {
+                                if(resultsCat.length > 0){
+                                    console.log("02")
+                                    connection.query('DELETE FROM categorie_register_cashReg WHERE id_register = ? AND id_categorie = ?', [resultsReg[0]['idint_register'], resultsCat[0]['idint_categorie']], function(error, results, fields) {
+                                        if(error) res.send(error)
+                                        else retfunc(results)
+                                    })
                                 }
                                 else {
-                                    res.send("Erreur - Id item innexistant");
+                                    res.send("L'id de catégorie n'existe pas.")
                                 }
-                            });
+                            }
+                        })
+                    }
+                    else if(id_user && id_user > 0){
+                        connection.query('SELECT idint_user FROM user_cashReg WHERE idext_user = ? ', [id_user], function(error, resultsUser, fields) {
+                            if(error) res.send(error)
+                            else {
+                                if(resultsUser.length > 0){
+                                    connection.query('DELETE FROM user_register_cashReg WHERE id_register = ? AND id_user = ?', [resultsReg[0]['idint_register'], resultsUser[0]['idint_user']], function(error, results, fields) {
+                                        if(error) res.send(error)
+                                        else retfunc(results)
+                                    })
+                                }
+                                else {
+                                    res.send("L'id de l'utilisateur n'existe pas.")
+                                }
+                            }
+                        })
+                    }
+                    else if(Number.isNaN(id_categorie) || Number.isNaN(id_user)){
+                        if(Number.isNaN(id_categorie)){
+                            res.send("Le format de l'id de categorie est incorrect")
                         }
-                        else res.send("Erreur - Id innexistant");
-                    });
+                        else {
+                            res.send("Le format de l'id d'utilisateur est incorrect")
+                        }
+                    }
+                    else {
+                        if(resultsReg.length > 0){
+                            connection.query('DELETE FROM categorie_register_cashReg WHERE id_register = ?', [resultsReg[0]['idint_register']], function(error, results, fields) {
+                                if(error) res.send(error)
+                                else {
+                                    connection.query('DELETE FROM user_register_cashReg WHERE id_register = ?', [resultsReg[0]['idint_register']], function(error, results, fields) {
+                                        if(error) res.send(error)
+                                        else {
+                                            connection.query('DELETE FROM register_cashReg WHERE idext_register = ?', [resultsReg[0]['idint_register']], function(error, results, fields) {
+                                                if(error) res.send(error)
+                                                else {
+                                                    retfunc(results)
+                                                }
+                                            })
+                                        }
+                                    })
+                                }
+                            })
+                        }
+                        else {
+                            res.send("L'id de caisse n'existe pas.")
+                        }
+                    }
                 }
-                else {
-                        connection.query('DELETE FROM sum_item_cashReg WHERE id_sum = ? ', [results_idsum[0]['idint_sum']], function(error, results, fields) {
-                            if(error) res.send(error);
-                            else connection.query('DELETE FROM sum_cashReg WHERE idint_sum = ? ', [results_idsum[0]['idint_sum']], function(error, results, fields) {
-                                if(error) res.send(error);
-                                else retfunc(results);
-                            });
-                        });
-                }
-            }
-            else res.send("Erreur - Id sum innexistant");
-        });
+            })
+        }
+        else {
+            res.send("Le format de l'id de caisse est incorrect")
+        }
     }
 
-    deleteSumItem(function(results) {
+    deleteRegister(function(results) {
         res.json(results);
     });
 });
-*/
+
 module.exports = router;
