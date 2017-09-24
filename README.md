@@ -1,6 +1,6 @@
 # cashReg
 
-Version : 0.4.7
+Version : 0.5.0
 
 ## Technologies utilisées
 
@@ -30,3 +30,5 @@ Pour la gestion des additions: `http://localhost:3000/sums/`
 Pour la gestion des categories: `http://localhost:3000/categories/`
 
 Pour la gestion des utilisateurs: `http://localhost:3000/users/`
+
+Pour la gestion des caisses: `http://localhost:3000/registers/`
