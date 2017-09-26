@@ -1,11 +1,15 @@
 # cashReg
 
-Version : 0.5.0
+Version : 0.5.1
 
 ## Technologies utilisées
 
 Node.js + Express
 MySQL
+
+## Documentation
+
+La documentation de l'api est à venir (version 1.0+)
 
 ## Mise en route de l'application
 
@@ -21,7 +25,7 @@ Il faudra au préalable installer les dépendances via `npm install` ou les mett
 
 ## Accès à l'API
 
-L'url d'accès à l'api est la suivante: `http://localhost:3000/`
+L'url d'accès à l'api (et documentation) est la suivante: `http://localhost:3000/`
 
 Pour la gestion des items: `http://localhost:3000/items/`
 

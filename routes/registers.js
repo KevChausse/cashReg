@@ -187,6 +187,39 @@ router.post('/:idext_register', function(req, res, next) {
 
 
 
+/* PUT register. */
+router.put('/:idext_register', function(req, res, next) {
+    idext_register = req.params.idext_register;
+    name_register = req.body.name_register;
+
+    var putRegister = function(retfunc){
+        connection.query('SELECT idext_register FROM register_cashReg WHERE idext_register = ?', [idext_register], function(error, results_idext, fields) {
+            if(results_idext.length > 0){
+                if( !Number.isNaN(idext_register) && idext_register>0 ){
+                    connection.query('UPDATE register_cashReg SET name_register = ? WHERE idext_register = ?', [name_register, idext_register], function(error, results, fields) {
+                        
+                        if(error) res.send(error);
+                        else retfunc(results);
+
+                    });
+                }
+                else {
+                    res.send("Erreur de format de valeur.");
+                }
+            }
+            else {
+                res.send("Erreur - L'id renseigné existe déja.");
+            }
+        })
+    }
+
+    putRegister(function(results) {
+        res.json(results);
+    });
+
+});
+
+
 /* DELETE register or register's categorie or user. */ 
 router.delete('/:idext_register', function(req, res, next) {
     idext_register = req.params.idext_register;
