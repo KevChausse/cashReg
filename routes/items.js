@@ -29,10 +29,34 @@ router.get('/:idext_item', function(req, res, next) {
     var idext_item = req.params.idext_item; 
 
     var getItem = function(retfunc){
-        connection.query('SELECT idint_item, name_item, description_item, value_item, quantity_item FROM item_cashReg WHERE idext_item = ?', [idext_item], function(error, results, fields) {
-            if(error) res.send(error);
-            else retfunc(results);
-        });
+        if(typeof idext_item === "number" && idext_item > 0){
+            connection.query('SELECT idint_item, name_item, description_item, value_item, quantity_item FROM item_cashReg WHERE idext_item = ?', [idext_item], function(error, results, fields) {
+                if(error) res.send(error);
+                else if(results.length > 0){
+                    retfunc(results);
+                }
+                else {
+                    var error = {
+                        'error_id' : 13,
+                        'error_type' : "ERR_ID_NON_EXISTENT",
+                        'error_value' : idext_item,
+                        'error_var' : "idext_item",
+                        'error_text' : "Erreur ERR_ID_NON_EXISTENT - La valeur de idext_item ("+idext_item+") n'existe pas."
+                    }
+                    retfunc(error)
+                }
+            });
+        }
+        else {
+            var error = {
+                'error_id' : 11,
+                'error_type' : "ERR_VALUE_FORMAT",
+                'error_value' : idext_item,
+                'error_var' : "idext_item",
+                'error_text' : "Erreur ERR_VALUE_FORMAT - Le format de la valeur de idext_item ("+idext_item+") est incorrect."
+            }
+            retfunc(error)
+        }
     }
 
     getItem(function(results) {
@@ -54,22 +78,60 @@ router.post('/', function(req, res, next) {
 
 
     var postItem = function(retfunc){
-        connection.query('SELECT idext_item FROM item_cashReg WHERE idext_item = ?', [idext_item], function(error, results_idext, fields) {
-            if(results_idext.length <= 0){
-                if( !Number.isNaN(idext_item) && idext_item>0 && !Number.isNaN(quantity_item) && quantity_item>=-1 && !Number.isNaN(value_item) && value_item>=0 ){  
+        if( typeof idext_item === "number" && idext_item>0 && typeof quantity_item === "number" && quantity_item>=-1 && typeof value_item === "number" && value_item>=0 ){  
+            
+            connection.query('SELECT idext_item FROM item_cashReg WHERE idext_item = ?', [idext_item], function(error, results_idext, fields) {
+                if(results_idext.length <= 0){
                     connection.query('INSERT INTO item_cashReg (idext_item, name_item, description_item, value_item, quantity_item) VALUES (?, ?, ?, ?, ?)', [idext_item, name_item, description_item, value_item, quantity_item], function(error, results, fields) {
                         if(error) res.send(error);
                         else retfunc(results);
                     });
                 }
                 else {
-                    res.send("Erreur de format de valeur.");
+                    var error = {
+                        'error_id' : 12,
+                        'error_type' : "ERR_ID_ALREADY_EXISTS",
+                        'error_value' : idext_item,
+                        'error_var' : "idext_item",
+                        'error_text' : "Erreur ERR_ID_ALREADY_EXISTS - L'objet ayant pour id idext_item ("+idext_item+") est déjà existant."
+                    }
+                    retfunc(error)
                 }
+            })
+        }
+        else {
+            if(typeof idext_item !== "number" || idext_item<=0){
+                var error = {
+                    'error_id' : 11,
+                    'error_type' : "ERR_VALUE_FORMAT",
+                    'error_value' : idext_item,
+                    'error_var' : "idext_item",
+                    'error_text' : "Erreur ERR_VALUE_FORMAT - Le format de la valeur de idext_item ("+idext_item+") est incorrect."
+                }
+                retfunc(error)
             }
-            else {
-                res.send("Erreur - L'id renseigné existe déja.");
+            else if(typeof quantity_item !== "number" || quantity_item<-1){
+                var error = {
+                    'error_id' : 11,
+                    'error_type' : "ERR_VALUE_FORMAT",
+                    'error_value' : quantity_item,
+                    'error_var' : "quantity_item",
+                    'error_text' : "Erreur ERR_VALUE_FORMAT - Le format de la valeur de quantity_item ("+quantity_item+") est incorrect."
+                }
+                retfunc(error)
             }
-        })
+            else if(typeof value_item !== "number" || value_item<0){
+                var error = {
+                    'error_id' : 11,
+                    'error_type' : "ERR_VALUE_FORMAT",
+                    'error_value' : value_item,
+                    'error_var' : "value_item",
+                    'error_text' : "Erreur ERR_VALUE_FORMAT - Le format de la valeur de value_item ("+value_item+") est incorrect."
+                }
+                retfunc(error)
+            }
+            else {res.send('ko')}
+        }
     }
 
     postItem(function(results) {
@@ -78,7 +140,7 @@ router.post('/', function(req, res, next) {
 
 });
 
-
+/////////////////////////////// /!\ typeof value === "number" à la place de isNaN
 
 /* PUT item. */
 router.put('/:idext_item', function(req, res, next) {

@@ -30,7 +30,7 @@ router.get('/:idext_categorie', function(req, res, next) {
     idext_categorie = req.params.idext_categorie
 
     var getCategoriesItem = function(retfunc){
-        if(!isNaN(idext_categorie) && idext_categorie > 0){
+        if(typeof idext_categorie === "number" && idext_categorie > 0){
             connection.query('SELECT idext_categorie, name_categorie, description_categorie FROM categorie_cashReg WHERE idext_categorie = ?', [idext_categorie], function(error, results, fields) {
                 
                 if(error) res.send(error);
@@ -91,7 +91,7 @@ router.post('/', function(req, res, next) {
 
     var postCategorie = function(retfunc){
 
-        if( !Number.isNaN(idext_categorie) && idext_categorie>0 ){
+        if( typeof idext_categorie === "number" && idext_categorie>0 ){
             connection.query('SELECT idext_categorie FROM categorie_cashReg WHERE idext_categorie = ?', [idext_categorie], function(error, results_idext, fields) {
                 if(results_idext.length <= 0){
                         connection.query('INSERT INTO categorie_cashReg (idext_categorie, name_categorie, description_categorie) VALUES (?, ?, ?)', [idext_categorie, name_categorie, description_categorie], function(error, results, fields) {
@@ -138,7 +138,7 @@ router.post('/:idext_categorie', function(req, res, next) {
     idext_item = req.body.idext_item;
   
     var postCategorieItem = function(retfunc){
-        if( !Number.isNaN(idext_categorie) && idext_categorie>0 && !Number.isNaN(idext_item) && idext_item>0 ){
+        if( typeof idext_categorie === "number" && idext_categorie>0 && typeof idext_item === "number" && idext_item>0 ){
             connection.query('SELECT idint_categorie FROM categorie_cashReg WHERE idext_categorie = ?', [idext_categorie], function(error, results_idcat, fields) {      
                 if(error) res.send(error);
                 else {
@@ -191,7 +191,7 @@ router.post('/:idext_categorie', function(req, res, next) {
             });
         }
         else {
-            if(!Number.isNaN(idext_categorie) && idext_categorie>0){
+            if(typeof idext_categorie === "number" && idext_categorie>0){
                 var error = {
                     'error_id' : 13,
                     'error_type' : "ERR_VALUE_FORMAT",
@@ -227,7 +227,7 @@ router.put('/:idext_categorie', function(req, res, next) {
     description_categorie = req.body.description_categorie;
 
     var putCategorie = function(retfunc){
-        if( !Number.isNaN(idext_categorie) && idext_categorie>0 ){
+        if( typeof idext_categorie === "number" && idext_categorie>0 ){
             connection.query('SELECT idext_categorie FROM categorie_cashReg WHERE idext_categorie = ?', [idext_categorie], function(error, results_idext, fields) {
                 if(results_idext.length > 0){
                     connection.query('UPDATE categorie_cashReg SET name_categorie = ?, description_categorie = ? WHERE idext_categorie = ?', [name_categorie, description_categorie, idext_categorie], function(error, results, fields) {
@@ -274,11 +274,11 @@ router.delete('/:idext_categorie', function(req, res, next) {
 
 
     var deleteCategorieItem = function(retfunc){
-        if(!isNaN(idext_categorie) && idext_categorie>0){
+        if(typeof idext_categorie === "number" && idext_categorie>0){
             connection.query('SELECT idint_categorie FROM categorie_cashReg WHERE idext_categorie = ?', [idext_categorie], function(error, results_idcat, fields) {     
                 if(error) res.send(error);
                 else if(results_idcat.length > 0){
-                    if(idext_item && !isNaN(idext_item) && idext_item>0){
+                    if(idext_item && typeof idext_item === "number" && idext_item>0){
                         connection.query('SELECT idint_item FROM item_cashReg WHERE idext_item = ?', [idext_item], function(error, results_iditem, fields) {     
                             if(error) res.send(error);
                             else if(results_iditem.length > 0){
@@ -300,7 +300,7 @@ router.delete('/:idext_categorie', function(req, res, next) {
                         });
                     }
                     else {
-                        if(!isNaN(idext_categorie) && idext_categorie>0){
+                        if(typeof idext_categorie === "number" && idext_categorie>0){
                             var error = {
                                 'error_id' : 13,
                                 'error_type' : "ERR_VALUE_FORMAT",
