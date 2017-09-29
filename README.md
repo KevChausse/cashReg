@@ -1,6 +1,6 @@
 # cashReg
 
-Version : 0.6.2
+Version : 0.6.3
 
 ## Technologies utilisées
 
@@ -9,7 +9,7 @@ MySQL
 
 ## Documentation
 
-La documentation de l'api est à venir (version 1.0+)
+La documentation de l'api est à venir (version 1.1+)
 
 ## Mise en route de l'application
 
