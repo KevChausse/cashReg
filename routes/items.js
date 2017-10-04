@@ -84,7 +84,16 @@ router.post('/', function(req, res, next) {
                 if(results_idext.length <= 0){
                     connection.query('INSERT INTO item_cashReg (idext_item, name_item, description_item, value_item, quantity_item) VALUES (?, ?, ?, ?, ?)', [idext_item, name_item, description_item, value_item, quantity_item], function(error, results, fields) {
                         if(error) res.send(error);
-                        else retfunc(results);
+                        else {
+                            var success = {
+                                'success_id' : 21,
+                                'success_type' : 'SUCC_POST_ELT',
+                                'success_value' : idext_item,
+                                'success_var' : 'idext_item',
+                                'success_text' : 'Le nouvel item ('+idext_item+') a bien été ajouté'
+                            }
+                            retfunc(success);
+                        }
                     });
                 }
                 else {
@@ -156,7 +165,16 @@ router.put('/:idext_item', function(req, res, next) {
                 if(results_idext.length > 0){
                     connection.query('UPDATE item_cashReg SET name_item = ?, description_item = ?, value_item = ?, quantity_item = ? WHERE idext_item = ?', [name_item, description_item, value_item, quantity_item, idext_item], function(error, results, fields) {
                         if(error) res.send(error);
-                        else retfunc(results);
+                        else {
+                            var success = {
+                                'success_id' : 23,
+                                'success_type' : 'SUCC_PUT_ELT',
+                                'success_value' : idext_item,
+                                'success_var' : 'idext_item',
+                                'success_text' : 'L\'item ('+idext_item+') a bien été modifié'
+                            }
+                            retfunc(success);
+                        }
                     });
                 }
                 else {
@@ -224,7 +242,16 @@ router.delete('/:idext_item', function(req, res, next) {
                 if(results_idext.length > 0){
                     connection.query('DELETE FROM item_cashReg WHERE idext_item = ?', [idext_item], function(error, results, fields) {
                         if(error) res.send(error);
-                        else retfunc(results);
+                        else {
+                            var success = {
+                                'success_id' : 24,
+                                'success_type' : 'SUCC_DEL_ELT',
+                                'success_value' : idext_item,
+                                'success_var' : 'idext_item',
+                                'success_text' : 'L\'item ('+idext_item+') a bien été supprimé'
+                            }
+                            retfunc(success);
+                        }
                     });
                 }
                 else {
