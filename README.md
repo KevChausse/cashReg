@@ -1,6 +1,6 @@
 # cashReg
 
-Version : 0.8.0
+Version : 1.0.0
 
 ## Technologies utilisées
 
@@ -22,6 +22,7 @@ Attention, il est possible que certains paramètres soient à modifier. Pour cel
 
 Le lancement de l'application se fait : `npm start` ou `nodemon` depuis le dossier racine
 Il faudra au préalable installer les dépendances via `npm install` ou les mettre à jour via `npm update` depuis le dossier racine
+Il est possible que le port 3000 (port par defaut de l'api) ne soit pas disponible. Pour cela, modifiez le dans le fichier `/bin/www`
 
 ## Accès à l'API
 
@@ -36,3 +37,9 @@ Pour la gestion des categories: `http://localhost:3000/categories/`
 Pour la gestion des utilisateurs: `http://localhost:3000/users/`
 
 Pour la gestion des caisses: `http://localhost:3000/registers/`
+
+## Versions à venir
+
+* Documentation de l'API
+* Gestion des logins
+* Interface graphique
