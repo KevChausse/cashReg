@@ -174,7 +174,7 @@ router.post('/:idext_categorie', function(req, res, next) {
                                                 'success_type' : 'SUCC_POST_SUBELT',
                                                 'success_value' : idext_item,
                                                 'success_var' : 'idext_item',
-                                                'success_text' : 'L\'item ('+idext_item+') a bien été ajouté à la catégorie'
+                                                'success_text' : 'L\'item ('+idext_item+') a bien été ajouté à la catégorie ('+idext_categorie+')'
                                             }
                                             retfunc(success);
                                         }
@@ -317,7 +317,7 @@ router.delete('/:idext_categorie', function(req, res, next) {
                                             'success_type' : 'SUCC_DEL_SUBELT',
                                             'success_value' : idext_item,
                                             'success_var' : 'idext_item',
-                                            'success_text' : 'L\'item ('+idext_item+') a bien été supprimé de la catégorie'
+                                            'success_text' : 'L\'item ('+idext_item+') a bien été supprimé de la catégorie ('+idext_categorie+')'
                                         }
                                         retfunc(success);
                                     }
