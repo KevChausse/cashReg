@@ -101,7 +101,16 @@ router.post('/', function(req, res, next) {
                 if(results_idext.length <= 0){
                         connection.query('INSERT INTO register_cashReg (idext_register, name_register) VALUES (?, ?)', [idext_register, name_register], function(error, results, fields) {
                             if(error) res.send(error);
-                            else retfunc(results);
+                            else {
+                                var success = {
+                                    'success_id' : 21,
+                                    'success_type' : 'SUCC_POST_ELT',
+                                    'success_value' : idext_register,
+                                    'success_var' : 'idext_register',
+                                    'success_text' : 'La nouvelle caisse ('+idext_register+') a bien été ajoutée'
+                                }
+                                retfunc(success);
+                            }
                         });
                 }
                 else {
@@ -168,7 +177,16 @@ router.post('/:idext_register', function(req, res, next) {
                                         else {
                                             connection.query('INSERT INTO categorie_register_cashReg (id_categorie, id_register) VALUES (?, ?)', [resultsCat[0]['idint_categorie'], resultsReg[0]['idint_register']], function(error, results, fields) {
                                                 if(error) res.send(error);
-                                                else retfunc(results);
+                                                else {
+                                                    var success = {
+                                                        'success_id' : 22,
+                                                        'success_type' : 'SUCC_POST_SUBELT',
+                                                        'success_value' : id_categorie,
+                                                        'success_var' : 'id_categorie',
+                                                        'success_text' : 'La  catégorie ('+id_categorie+') a bien été ajoutée à la caisse ('+idext_register+')'
+                                                    }
+                                                    retfunc(success);
+                                                }
                                             });
                                         }
                                     });
@@ -206,7 +224,16 @@ router.post('/:idext_register', function(req, res, next) {
                                         else {
                                             connection.query('INSERT INTO user_register_cashReg (id_user, id_register) VALUES (?, ?)', [resultsUser[0]['idint_user'], resultsReg[0]['idint_register']], function(error, results, fields) {
                                                 if(error) res.send(error);
-                                                else retfunc(results);
+                                                else {
+                                                    var success = {
+                                                        'success_id' : 22,
+                                                        'success_type' : 'SUCC_POST_SUBELT',
+                                                        'success_value' : id_user,
+                                                        'success_var' : 'id_user',
+                                                        'success_text' : 'L\'utilisateur ('+id_user+') a bien été ajouté à la caisse ('+idext_register+')'
+                                                    }
+                                                    retfunc(success);
+                                                }
                                             });
                                         }
                                     });
@@ -292,7 +319,16 @@ router.put('/:idext_register', function(req, res, next) {
                         connection.query('UPDATE register_cashReg SET name_register = ? WHERE idext_register = ?', [name_register, idext_register], function(error, results, fields) {
                             
                             if(error) res.send(error);
-                            else retfunc(results);
+                            else {
+                                var success = {
+                                    'success_id' : 23,
+                                    'success_type' : 'SUCC_PUT_ELT',
+                                    'success_value' : idext_register,
+                                    'success_var' : 'idext_register',
+                                    'success_text' : 'La caisse ('+idext_register+') a bien été modifiée'
+                                }
+                                retfunc(success);
+                            }
 
                         });
                 }
@@ -346,7 +382,16 @@ router.delete('/:idext_register', function(req, res, next) {
                                 if(resultsCat.length > 0){
                                     connection.query('DELETE FROM categorie_register_cashReg WHERE id_register = ? AND id_categorie = ?', [resultsReg[0]['idint_register'], resultsCat[0]['idint_categorie']], function(error, results, fields) {
                                         if(error) res.send(error)
-                                        else retfunc(results)
+                                        else {
+                                            var success = {
+                                                'success_id' : 25,
+                                                'success_type' : 'SUCC_DEL_SUBELT',
+                                                'success_value' : id_categorie,
+                                                'success_var' : 'id_categorie',
+                                                'success_text' : 'La catégorie ('+id_categorie+') a bien été supprimée de la caisse ('+idext_register+')'
+                                            }
+                                            retfunc(success);
+                                        }
                                     })
                                 }
                                 else {
@@ -369,7 +414,16 @@ router.delete('/:idext_register', function(req, res, next) {
                                 if(resultsUser.length > 0){
                                     connection.query('DELETE FROM user_register_cashReg WHERE id_register = ? AND id_user = ?', [resultsReg[0]['idint_register'], resultsUser[0]['idint_user']], function(error, results, fields) {
                                         if(error) res.send(error)
-                                        else retfunc(results)
+                                        else {
+                                            var success = {
+                                                'success_id' : 25,
+                                                'success_type' : 'SUCC_DEL_SUBELT',
+                                                'success_value' : id_user,
+                                                'success_var' : 'id_user',
+                                                'success_text' : 'L\'utilisateur ('+id_user+') a bien été supprimé de la caisse ('+idext_register+')'
+                                            }
+                                            retfunc(success);
+                                        }
                                     })
                                 }
                                 else {
@@ -418,7 +472,14 @@ router.delete('/:idext_register', function(req, res, next) {
                                             connection.query('DELETE FROM register_cashReg WHERE idext_register = ?', [resultsReg[0]['idint_register']], function(error, results, fields) {
                                                 if(error) res.send(error)
                                                 else {
-                                                    retfunc(results)
+                                                    var success = {
+                                                        'success_id' : 24,
+                                                        'success_type' : 'SUCC_DEL_ELT',
+                                                        'success_value' : idext_register,
+                                                        'success_var' : 'idext_register',
+                                                        'success_text' : 'La caisse ('+idext_register+') a bien été supprimée'
+                                                    }
+                                                    retfunc(success);
                                                 }
                                             })
                                         }
