@@ -92,7 +92,16 @@ router.post('/', function(req, res, next) {
                 if(results_idext.length <= 0){                    
                         connection.query('INSERT INTO sum_cashReg (idext_sum) VALUES (?)', [idext_sum], function(error, results, fields) {
                             if(error) res.send(error);
-                            else retfunc(results);
+                            else {
+                                var success = {
+                                    'success_id' : 21,
+                                    'success_type' : 'SUCC_POST_ELT',
+                                    'success_value' : idext_sum,
+                                    'success_var' : 'idext_sum',
+                                    'success_text' : 'La nouvelle addition ('+idext_sum+') a bien été ajoutée'
+                                }
+                                retfunc(success);
+                            }
                         });
                 }
                 else {
@@ -146,13 +155,31 @@ router.post('/:idext_sum', function(req, res, next) {
                                 if(results_sum.length > 0){
                                     connection.query('UPDATE sum_item_cashReg SET quantity_sum = quantity_sum + ? WHERE id_item = ? AND id_sum = ?', [qty_item, results_iditem[0]['idint_item'], results_idsum[0]['idint_sum']], function(error, results, fields) {
                                         if(error) res.send(error);
-                                        else retfunc(results);
+                                        else {
+                                            var success = {
+                                                'success_id' : 22,
+                                                'success_type' : 'SUCC_POST_SUBELT',
+                                                'success_value' : idext_item,
+                                                'success_var' : 'idext_item',
+                                                'success_text' : 'Les '+qty_item+' items ('+idext_item+') ont bien été ajoutés à l\'addition ('+idext_sum+')'
+                                            }
+                                            retfunc(success);
+                                        }
                                     });
                                 }
                                 else {
                                     connection.query('INSERT INTO sum_item_cashReg (id_sum, id_item, quantity_sum) VALUES (?, ?, ?)', [results_idsum[0]['idint_sum'], results_iditem[0]['idint_item'], qty_item], function(error, results, fields) {
                                         if(error) res.send(error);
-                                        else retfunc(results);
+                                        else {
+                                            var success = {
+                                                'success_id' : 22,
+                                                'success_type' : 'SUCC_POST_SUBELT',
+                                                'success_value' : idext_item,
+                                                'success_var' : 'idext_item',
+                                                'success_text' : 'Les '+qty_item+' items ('+idext_item+') ont bien été ajoutés à l\'addition ('+idext_sum+')'
+                                            }
+                                            retfunc(success);
+                                        }
                                     });
                                 }
                             });
@@ -246,13 +273,31 @@ router.delete('/:idext_sum', function(req, res, next) {
                                             if(results_qty[0]['quantity_sum'] == 1){
                                                 connection.query('DELETE FROM sum_item_cashReg WHERE id_sum = ? AND id_item = ?', [results_idsum[0]['idint_sum'], results_iditem[0]['idint_item']], function(error, results, fields) {
                                                     if(error) res.send(error);
-                                                    else retfunc(results);
+                                                    else {
+                                                        var success = {
+                                                            'success_id' : 25,
+                                                            'success_type' : 'SUCC_DEL_SUBELT',
+                                                            'success_value' : idext_item,
+                                                            'success_var' : 'idext_item',
+                                                            'success_text' : 'L\'item ('+idext_item+') a bien été retiré de l\'addition ('+idext_sum+')'
+                                                        }
+                                                        retfunc(success);
+                                                    }
                                                 });
                                             }
                                             else{
                                                 connection.query('UPDATE sum_item_cashReg SET quantity_sum = quantity_sum - 1 WHERE id_item = ? AND id_sum = ?', [results_iditem[0]['idint_item'], results_idsum[0]['idint_sum']], function(error, results, fields) {
                                                     if(error) res.send(error);
-                                                    else retfunc(results);
+                                                    else {
+                                                        var success = {
+                                                            'success_id' : 25,
+                                                            'success_type' : 'SUCC_DEL_SUBELT',
+                                                            'success_value' : idext_item,
+                                                            'success_var' : 'idext_item',
+                                                            'success_text' : 'L\'item ('+idext_item+') (qté: -1) a bien été supprimé de l\'addition ('+idext_sum+')'
+                                                        }
+                                                        retfunc(success);
+                                                    }
                                                 });
                                             }
                                         }
@@ -286,7 +331,16 @@ router.delete('/:idext_sum', function(req, res, next) {
                             if(error) res.send(error);
                             else connection.query('DELETE FROM sum_cashReg WHERE idint_sum = ? ', [results_idsum[0]['idint_sum']], function(error, results, fields) {
                                 if(error) res.send(error);
-                                else retfunc(results);
+                                else {
+                                    var success = {
+                                        'success_id' : 24,
+                                        'success_type' : 'SUCC_DEL_ELT',
+                                        'success_value' : idext_sum,
+                                        'success_var' : 'idext_sum',
+                                        'success_text' : 'L\'addition ('+idext_sum_+') a bien été supprimée'
+                                    }
+                                    retfunc(success);
+                                }
                             });
                         });
                     }
