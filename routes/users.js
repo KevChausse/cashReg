@@ -85,7 +85,16 @@ router.post('/', function(req, res, next) {
                 if(results_idext.length <= 0){
                     connection.query('INSERT INTO user_cashReg (idext_user, fname_user, lname_user, email_user, birthdate_user) VALUES (?, ?, ?, ?, ?)', [idext_user, fname_user, lname_user, email_user, birthdate_user], function(error, results, fields) {
                         if(error) res.send(error);
-                        else retfunc(results);
+                        else {
+                            var success = {
+                                'success_id' : 21,
+                                'success_type' : 'SUCC_POST_ELT',
+                                'success_value' : idext_user,
+                                'success_var' : 'idext_user',
+                                'success_text' : 'Le nouvel utilisateur ('+idext_user+') a bien été ajouté'
+                            }
+                            retfunc(success);
+                        }
                     });
                 }
                 else {
@@ -159,7 +168,16 @@ router.put('/:idext_user', function(req, res, next) {
                 if(results_idext.length <= 0){
                     connection.query('UPDATE user_cashReg SET fname_user = ?, lname_user = ?, email_user = ?, birthdate_user = ? WHERE idext_user = ?', [fname_user, lname_user, email_user, birthdate_user, idext_user], function(error, results, fields) {
                         if(error) res.send(error);
-                        else retfunc(results);
+                        else {
+                            var success = {
+                                'success_id' : 23,
+                                'success_type' : 'SUCC_PUT_ELT',
+                                'success_value' : idext_user,
+                                'success_var' : 'idext_user',
+                                'success_text' : 'L\'utilisateur ('+idext_user+') a bien été modifié'
+                            }
+                            retfunc(success);
+                        }
                     });
                 }
                 else {
@@ -226,7 +244,16 @@ router.delete('/:idext_user', function(req, res, next) {
         if( idext_user && !Number.isNaN(idext_user) && idext_user>0 ){
             connection.query('DELETE FROM user_cashReg WHERE idext_user = ?', [idext_user], function(error, results, fields) {
                 if(error) res.send(error);
-                else retfunc(results);
+                else{
+                    var success = {
+                        'success_id' : 24,
+                        'success_type' : 'SUCC_DEL_ELT',
+                        'success_value' : idext_user,
+                        'success_var' : 'idext_user',
+                        'success_text' : 'L\'utilisateur ('+idext_user+') a bien été supprimé'
+                    }
+                    retfunc(success);
+                }
             });
         }
         else {
