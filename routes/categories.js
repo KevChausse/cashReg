@@ -97,7 +97,16 @@ router.post('/', function(req, res, next) {
                         connection.query('INSERT INTO categorie_cashReg (idext_categorie, name_categorie, description_categorie) VALUES (?, ?, ?)', [idext_categorie, name_categorie, description_categorie], function(error, results, fields) {
                             
                             if(error) res.send(error);
-                            else retfunc(results);
+                            else {
+                                var success = {
+                                    'success_id' : 21,
+                                    'success_type' : 'SUCC_POST_ELT',
+                                    'success_value' : idext_categorie,
+                                    'success_var' : 'idext_categorie',
+                                    'success_text' : 'La nouvelle catégorie ('+idext_categorie+') a bien été ajoutée'
+                                }
+                                retfunc(success);
+                            } 
 
                         });
                 }
@@ -159,7 +168,16 @@ router.post('/:idext_categorie', function(req, res, next) {
                                 else {
                                     connection.query('INSERT INTO categorie_item_cashReg (id_categorie, id_item) VALUES (?, ?)', [results_idcat[0]['idint_categorie'], results_iditem[0]['idint_item']], function(error, results, fields) {
                                         if(error) res.send(error);
-                                        else retfunc(results);
+                                        else {
+                                            var success = {
+                                                'success_id' : 22,
+                                                'success_type' : 'SUCC_POST_SUBELT',
+                                                'success_value' : idext_item,
+                                                'success_var' : 'idext_item',
+                                                'success_text' : 'L\'item ('+idext_item+') a bien été ajouté à la catégorie'
+                                            }
+                                            retfunc(success);
+                                        }
                                     });
                                 }
                             });
@@ -233,7 +251,16 @@ router.put('/:idext_categorie', function(req, res, next) {
                     connection.query('UPDATE categorie_cashReg SET name_categorie = ?, description_categorie = ? WHERE idext_categorie = ?', [name_categorie, description_categorie, idext_categorie], function(error, results, fields) {
                         
                         if(error) res.send(error);
-                        else retfunc(results);
+                        else {
+                            var success = {
+                                'success_id' : 23,
+                                'success_type' : 'SUCC_PUT_ELT',
+                                'success_value' : idext_categorie,
+                                'success_var' : 'idext_categorie',
+                                'success_text' : 'La catégorie ('+idext_categorie+') a bien été modifiée'
+                            }
+                            retfunc(success);
+                        }
 
                     });
                 }
@@ -284,7 +311,16 @@ router.delete('/:idext_categorie', function(req, res, next) {
                             else if(results_iditem.length > 0){
                                 connection.query('DELETE FROM categorie_item_cashReg WHERE id_categorie = ? AND id_item = ?', [results_idcat[0]['idint_categorie'], results_iditem[0]['idint_item']], function(error, results, fields) {
                                     if(error) res.send(error);
-                                    else retfunc(results);
+                                    else {
+                                        var success = {
+                                            'success_id' : 25,
+                                            'success_type' : 'SUCC_DEL_SUBELT',
+                                            'success_value' : idext_item,
+                                            'success_var' : 'idext_item',
+                                            'success_text' : 'L\'item ('+idext_item+') a bien été supprimé de la catégorie'
+                                        }
+                                        retfunc(success);
+                                    }
                                 });
                             }
                             else {
@@ -315,7 +351,16 @@ router.delete('/:idext_categorie', function(req, res, next) {
                                 if(error) res.send(error);
                                 else connection.query('DELETE FROM categorie_cashReg WHERE idint_categorie = ? ', [results_idcat[0]['idint_categorie']], function(error, results, fields) {
                                     if(error) res.send(error);
-                                    else retfunc(results);
+                                    else {
+                                        var success = {
+                                            'success_id' : 24,
+                                            'success_type' : 'SUCC_DEL_ELT',
+                                            'success_value' : idext_categorie,
+                                            'success_var' : 'idext_categorie',
+                                            'success_text' : 'La catégorie ('+idext_categorie+') a bien été supprimée'
+                                        }
+                                        retfunc(success);
+                                    }
                                 });
                             });
                         }
